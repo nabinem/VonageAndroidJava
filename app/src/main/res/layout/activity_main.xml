@@ -8,6 +8,14 @@
     android:gravity="center"
     tools:context=".MainActivity">
 
+    <Button
+        android:id="@+id/logFemTokenBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:text="Log FCM token to LogCat"
+        tools:visibility="visible"/>
+
     <TextView
         android:id="@+id/connectionStatusTextView"
         android:layout_width="wrap_content"
@@ -30,5 +38,27 @@
         android:layout_height="wrap_content"
         android:text="End call"
         android:visibility="gone"
+        android:layout_marginBottom="40dp"
         tools:visibility="visible"/>
+
+    <Button
+        android:id="@+id/answerCallButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Answer"
+        android:visibility="gone"
+        android:backgroundTint="#1B551F"
+        android:layout_marginBottom="20dp"
+        tools:visibility="visible" />
+
+    <Button
+        android:id="@+id/rejectCallButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:text="Reject"
+        android:visibility="gone"
+        android:backgroundTint="#AF3535"
+        tools:visibility="visible" />
+
 </LinearLayout>

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "176646007871",
+    "project_id": "vonageandroidjava",
+    "storage_bucket": "vonageandroidjava.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:176646007871:android:a4d10cb764cc9ba98d1c8a",
+        "android_client_info": {
+          "package_name": "com.nabinnembang.vonageandroidjava"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "176646007871-9epcvt1jgcdvddi3tfsgc433jlh367ot.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBaUiJe1ZrIasQeeAQXqCe2XUyKbLTx6UQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "176646007871-9epcvt1jgcdvddi3tfsgc433jlh367ot.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
