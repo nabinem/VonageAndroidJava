@@ -47,16 +47,17 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // FCM registration token to your app server.
         sendRegistrationToServer(token);
 
-        Log.d(TAG, "NExmoClient: "+String.valueOf(NexmoClient.get()));
+        NexmoClient client = NexmoClient.get();
+        Log.d(TAG, "NExmoClient: "+String.valueOf(client));
+        if (client != null){
+            NexmoClient.get().enablePushNotifications(token, new NexmoRequestListener<Void>() {
+                @Override
+                public void onSuccess(@Nullable Void p0) {}
 
-
-        NexmoClient.get().enablePushNotifications(token, new NexmoRequestListener<Void>() {
-            @Override
-            public void onSuccess(@Nullable Void p0) {}
-
-            @Override
-            public void onError(@NonNull NexmoApiError nexmoApiError) {}
-        });
+                @Override
+                public void onError(@NonNull NexmoApiError nexmoApiError) {}
+            });
+        }
 
     }
 

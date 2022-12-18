@@ -82,10 +82,13 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "IntentExtraKey: " + key + " IntentExtraValue: " + value);
             }
         }
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED){
+            // request permissions
+            Log.d(TAG, "PERMISSION NOT GRANTEDDDDD");
+            String[] callsPermissions = {Manifest.permission.READ_PHONE_STATE, Manifest.permission.RECORD_AUDIO};
+            ActivityCompat.requestPermissions(this, callsPermissions, CALL_PERM_CODE);
+        }
 
-        // request permissions
-        String[] callsPermissions = {Manifest.permission.READ_PHONE_STATE, Manifest.permission.RECORD_AUDIO};
-        ActivityCompat.requestPermissions(this, callsPermissions, CALL_PERM_CODE);
 
         // init views
         logFemTokenBtn = findViewById(R.id.logFemTokenBtn);
@@ -101,38 +104,7 @@ public class MainActivity extends AppCompatActivity {
         answerCallButton.setOnClickListener(view -> { answerCall();});
         rejectCallButton.setOnClickListener(view -> { rejectCall();});
 
-
-        client = NexmoClient.get();
-        if (client != null) {
-            Log.d(TAG, "NexmoClientTest: " + String.valueOf(client));
-
-            //Listen for client connection status changes
-            client.setConnectionListener((connectionStatus, connectionStatusReason) -> {
-                Log.d(TAG, "NexmoClient connectionStatus: " + connectionStatus.toString());
-                runOnUiThread(() -> {
-                    connectionStatusTextView.setText(connectionStatus.toString());
-                });
-
-                if (connectionStatus == ConnectionStatus.CONNECTED) {
-                    runOnUiThread(() -> {
-                        // startCallButton.setVisibility(View.VISIBLE);
-                    });
-                }
-            });
-
-            client.addIncomingCallListener(it -> {
-                onGoingCall = it;
-
-                answerCallButton.setVisibility(View.VISIBLE);
-                rejectCallButton.setVisibility(View.VISIBLE);
-            });
-            //client.removeIncomingCallListeners();
-
-            //NexmoClient.get().login("uyuyuiyiuyiuyui");
-            client.login(jwtToken);
-            //Log.d(TAG, "jwtToken: "+jwtToken);
-        }
-
+        registerNexmoClient();
     }
 
     @SuppressLint("MissingPermission")
@@ -142,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
         client.serverCall("16202273311", customData, new NexmoRequestListener<NexmoCall>() {
             @Override
             public void onError(@NonNull NexmoApiError nexmoApiError) {
-
+                Log.d(TAG, "StartCallError: "+nexmoApiError.getMessage());
             }
 
             @Override
@@ -249,6 +221,13 @@ public class MainActivity extends AppCompatActivity {
 
                         // Get new FCM registration token
                         String token = task.getResult();
+                        NexmoClient.get().enablePushNotifications(token, new NexmoRequestListener<Void>() {
+                            @Override
+                            public void onSuccess(@Nullable Void p0) {}
+
+                            @Override
+                            public void onError(@NonNull NexmoApiError nexmoApiError) {}
+                        });
 
                         // Log and toast
                         String msg = getString(R.string.msg_token_fmt, token);
@@ -260,44 +239,48 @@ public class MainActivity extends AppCompatActivity {
 
 //    @Override
 //    public void onRequestPermissionsResult(int permsRequestCode, String[] permissions, int[] grantResults) {
-//        super.onRequestPermissionsResult(permsRequestCode, permissions, grantResults);
+//        //super.onRequestPermissionsResult(permsRequestCode, permissions, grantResults);
 //        Log.d(TAG, "permsRequestCode: " + permsRequestCode);
 //
 //
 //        switch (permsRequestCode) {
 //            case CALL_PERM_CODE:
-//                // init client
-//                client = NexmoClient.get();
-//                Log.d(TAG, "NexmoClientTest: "+String.valueOf(client));
 //
-//                //Listen for client connection status changes
-//                client.setConnectionListener((connectionStatus, connectionStatusReason) -> {
-//                    Log.d(TAG, "NexmoClient connectionStatus: " +connectionStatus.toString());
-//                    runOnUiThread(() -> {
-//                        connectionStatusTextView.setText(connectionStatus.toString());
-//                    });
-//
-//                    if (connectionStatus == ConnectionStatus.CONNECTED) {
-//                        runOnUiThread(() -> {
-//                            // startCallButton.setVisibility(View.VISIBLE);
-//                        });
-//                    }
-//                });
-//
-//                client.addIncomingCallListener(it -> {
-//                    onGoingCall = it;
-//
-//                    answerCallButton.setVisibility(View.VISIBLE);
-//                    rejectCallButton.setVisibility(View.VISIBLE);
-//                });
-//                //client.removeIncomingCallListeners();
-//
-//                //NexmoClient.get().login("uyuyuiyiuyiuyui");
-//                client.login(jwtToken);
-//                //Log.d(TAG, "jwtToken: "+jwtToken);
 //        }
 //
 //    }
+
+    public void registerNexmoClient(){
+        // init client
+        client = NexmoClient.get();
+        Log.d(TAG, "NexmoClientTest: "+String.valueOf(client));
+
+        //Listen for client connection status changes
+        client.setConnectionListener((connectionStatus, connectionStatusReason) -> {
+            Log.d(TAG, "NexmoClient connectionStatus: " +connectionStatus.toString());
+            runOnUiThread(() -> {
+                connectionStatusTextView.setText(connectionStatus.toString());
+            });
+
+            if (connectionStatus == ConnectionStatus.CONNECTED) {
+                runOnUiThread(() -> {
+                    // startCallButton.setVisibility(View.VISIBLE);
+                });
+            }
+        });
+
+        client.addIncomingCallListener(it -> {
+            onGoingCall = it;
+
+            answerCallButton.setVisibility(View.VISIBLE);
+            rejectCallButton.setVisibility(View.VISIBLE);
+        });
+        //client.removeIncomingCallListeners();
+
+        //NexmoClient.get().login("uyuyuiyiuyiuyui");
+        client.login(jwtToken);
+        //Log.d(TAG, "jwtToken: "+jwtToken);
+    }
 
 
 
