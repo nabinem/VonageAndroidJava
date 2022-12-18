@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private Button answerCallButton;
     private Button rejectCallButton;
     private TextView connectionStatusTextView;
-    private static final String jwtToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2NjgwMzc2MjgsImV4cCI6MTY2ODEwOTYyOCwianRpIjoiTVRVNE1qZzBPVFkwTUE9PSIsImFwcGxpY2F0aW9uX2lkIjoiYmE4ZWJkZjAtOTRmMC00ZWZmLWFlNjMtOTE0ZjA3MDY2NGMxIiwic3ViIjoiSVFESUFMX0xPQ0FMOk1PQklMRTo0Om1AbS5jb20iLCJhY2wiOnsicGF0aHMiOnsiLyovdXNlcnMvKioiOnt9LCIvKi9jb252ZXJzYXRpb25zLyoqIjp7fSwiLyovc2Vzc2lvbnMvKioiOnt9LCIvKi9kZXZpY2VzLyoqIjp7fSwiLyovaW1hZ2UvKioiOnt9LCIvKi9tZWRpYS8qKiI6e30sIi8qL2FwcGxpY2F0aW9ucy8qKiI6e30sIi8qL3B1c2gvKioiOnt9LCIvKi9rbm9ja2luZy8qKiI6e30sIi8qL2xlZ3MvKioiOnt9fX19.I1mf1dQ1fbhuwx1tAAhQLZ3NpccyG6ByR9i5-X3pfheQnEi3fS0gB1aUbw8MKoMpdVAkAymRriHZEnSkxOjdNsAXjJSxngQDkbtGlhqjMNdJJzzzr15SniJrQVqPUZj64LoxW6Mu6nx40KaNAccXE9HjlomqiWYkLKeFbeBLbfkoH1fBIyNjeCnkMwmQrCN4SzFkTa9Hw97ZFUwdrPrpr4wngVfHYENmT5GkQYw3Q1trn7CYGVqCgK8mzKrgwBKFmpAHwlltFKI77QGqkX0RDZRVEyyyhgNjLCiThxPXu7DG9u3JVB-i86BnwDAW2Kl5aIuVgy3M5G5lHbvL5vh2wQ";
+    private static final String jwtToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2NzEzNDAzOTAsImV4cCI6MTY3MTQxMjM5MCwianRpIjoiTkRNNE5EQXhNakV4IiwiYXBwbGljYXRpb25faWQiOiJiYThlYmRmMC05NGYwLTRlZmYtYWU2My05MTRmMDcwNjY0YzEiLCJzdWIiOiJJUURJQUxfTE9DQUw6TU9CSUxFOjQ6bUBtLmNvbSIsImFjbCI6eyJwYXRocyI6eyIvKi91c2Vycy8qKiI6e30sIi8qL2NvbnZlcnNhdGlvbnMvKioiOnt9LCIvKi9zZXNzaW9ucy8qKiI6e30sIi8qL2RldmljZXMvKioiOnt9LCIvKi9pbWFnZS8qKiI6e30sIi8qL21lZGlhLyoqIjp7fSwiLyovYXBwbGljYXRpb25zLyoqIjp7fSwiLyovcHVzaC8qKiI6e30sIi8qL2tub2NraW5nLyoqIjp7fSwiLyovbGVncy8qKiI6e319fX0.LT_A2RXI8z3EO7PHx6hz6r3ksFYz-_ly-lbOlOMaRso2BR-D6aAXJkSxlhTbxSPUjARzHx7B8EuWfFewcFslMfuRU7GN2aIoA8ZBzv4LDrTfh2eyPyd2C-cSffK-BIRiTxvRJexoddMB768IZxBRJIeBBUEQ1PJmGobaXu6GiL2egdoTaFM7sH3BcPXBSQjr5uAyAxSIvkMWv2NZ4rLKYfsn61wkqr1W_s-m-njObjPscTSwGZzNENkSa3mS4x1Ub52OXXl5jMjjS-qiG2fMyPvrbOkG__pchkZTJ5Nm6BOiicJMzxnYNuMAxvF-e-DaHq7fI60xGYE4qVY09n1XGQ ◀eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2NzEzNDAzOTAsImV4cCI6MTY3MTQxMjM5MCwianRpIjoiTkRNNE5EQXhNakV4IiwiYXBwbGljYXRpb25faWQiOiJiYThlYmRmMC05NGYwLTRlZmY";
     public static final int  READ_PHONE_STATE_PERM_CODE = 123;
     public static final int RECORD_AUDIO_PERM_CODE = 456;
 
@@ -103,18 +103,20 @@ public class MainActivity extends AppCompatActivity {
         rejectCallButton.setOnClickListener(view -> { rejectCall();});
 
         // init client
-        client = new NexmoClient.Builder().build(this);
-        //Log.d("MyTest", String.valueOf(client));
+        client = NexmoClient.get();
+        Log.d(TAG, "NexmoClient: "+String.valueOf(NexmoClient.get()));
+        Log.d(TAG, "NexmoClient: "+String.valueOf(client));
 
         //Listen for client connection status changes
         client.setConnectionListener((connectionStatus, connectionStatusReason) -> {
+            Log.d(TAG, "NexmoClient connectionStatus: " +connectionStatus.toString());
             runOnUiThread(() -> {
                 connectionStatusTextView.setText(connectionStatus.toString());
             });
 
             if (connectionStatus == ConnectionStatus.CONNECTED) {
                 runOnUiThread(() -> {
-                    startCallButton.setVisibility(View.VISIBLE);
+                   // startCallButton.setVisibility(View.VISIBLE);
                 });
             }
         });
@@ -127,7 +129,10 @@ public class MainActivity extends AppCompatActivity {
         });
         //client.removeIncomingCallListeners();
 
+        //NexmoClient.get().login("uyuyuiyiuyiuyui");
         client.login(jwtToken);
+        //Log.d(TAG, "jwtToken: "+jwtToken);
+
     }
 
     @SuppressLint("MissingPermission")
@@ -144,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
             public void onSuccess(@Nullable NexmoCall call) {
                 runOnUiThread(() -> {
                     endCallButton.setVisibility(View.VISIBLE);
-                    startCallButton.setVisibility(View.INVISIBLE);
+                    //startCallButton.setVisibility(View.INVISIBLE);
                 });
 
                 onGoingCall = call;
@@ -156,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
 
                             runOnUiThread(() -> {
                                 endCallButton.setVisibility(View.INVISIBLE);
-                                startCallButton.setVisibility(View.VISIBLE);
+                                //startCallButton.setVisibility(View.VISIBLE);
                             });
                         }
                     }

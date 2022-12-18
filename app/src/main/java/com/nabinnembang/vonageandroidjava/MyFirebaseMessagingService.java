@@ -20,6 +20,9 @@ import androidx.work.WorkManager;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.nexmo.client.NexmoClient;
+import com.nexmo.client.request_listener.NexmoApiError;
+import com.nexmo.client.request_listener.NexmoRequestListener;
 
 //https://github.com/firebase/quickstart-android/blob/master/messaging/app/src/main/java/com/google/firebase/quickstart/fcm/java/MyFirebaseMessagingService.java
 
@@ -43,6 +46,18 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // manage this apps subscriptions on the server side, send the
         // FCM registration token to your app server.
         sendRegistrationToServer(token);
+
+        Log.d(TAG, "NExmoClient: "+String.valueOf(NexmoClient.get()));
+
+
+        NexmoClient.get().enablePushNotifications(token, new NexmoRequestListener<Void>() {
+            @Override
+            public void onSuccess(@Nullable Void p0) {}
+
+            @Override
+            public void onError(@NonNull NexmoApiError nexmoApiError) {}
+        });
+
     }
 
 
@@ -87,9 +102,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         // Check if message contains a notification payload.
         if (remoteMessage.getNotification() != null) {
-            String notificationBody = remoteMessage.getNotification().getBody();
-            Log.d(TAG, "onMessageReceived Message Notification Body: " + notificationBody);
-            sendNotification(notificationBody);
+            //String notificationBody = remoteMessage.getNotification().getBody();
+            //Log.d(TAG, "onMessageReceived Message Notification Body: " + notificationBody);
+            sendNotification(remoteMessage);
         }
 
         // Also if you intend on generating your own notifications as a result of a received FCM
@@ -101,7 +116,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
      *
      * @param messageBody FCM message body received.
      */
-    private void sendNotification(String messageBody) {
+    private void sendNotification(RemoteMessage remoteMessage) {
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
@@ -112,8 +127,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this, channelId)
                         .setSmallIcon(R.drawable.ic_stat_ic_notification)
-                        .setContentTitle("Notification triggered by custom MyFirebaseMessagingService.sendNotification")
-                        .setContentText(messageBody)
+                        .setContentTitle("Title: "+remoteMessage.getNotification().getTitle())
+                        .setContentText("Body: "+remoteMessage.getNotification().getBody()+ " - Notification triggered by custom MyFirebaseMessagingService.sendNotification")
                         .setAutoCancel(true)
                         .setSound(defaultSoundUri)
                         .setContentIntent(pendingIntent);

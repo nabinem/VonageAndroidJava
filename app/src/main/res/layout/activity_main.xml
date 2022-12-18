@@ -29,7 +29,6 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
         android:text="Start call"
-        android:visibility="gone"
         tools:visibility="visible"/>
 
     <Button
