@@ -13,10 +13,10 @@ public class MainApplication extends Application{
     public void onCreate() {
         super.onCreate();
 
-        new NexmoClient.Builder()
-                //.restEnvironmentHost("https://api-us-1.nexmo.com")
-                //.environmentHost("https://ws-us-3.vonage.com")
-                .build(this);
-        Log.d(TAG, "NexmoClient: "+String.valueOf(NexmoClient.get()));
+//        new NexmoClient.Builder()
+//            .restEnvironmentHost("https://api-us-3.vonage.com")
+//            .environmentHost("https://ws-us-3.vonage.com")
+//            .build(this);
+//        Log.d(TAG, "NexmoClient: "+String.valueOf(NexmoClient.get()));
     }
 }

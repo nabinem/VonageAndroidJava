@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private Button answerCallButton;
     private Button rejectCallButton;
     private TextView connectionStatusTextView;
-    private static final String jwtToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2NzEzNDAzOTAsImV4cCI6MTY3MTQxMjM5MCwianRpIjoiTkRNNE5EQXhNakV4IiwiYXBwbGljYXRpb25faWQiOiJiYThlYmRmMC05NGYwLTRlZmYtYWU2My05MTRmMDcwNjY0YzEiLCJzdWIiOiJJUURJQUxfTE9DQUw6TU9CSUxFOjQ6bUBtLmNvbSIsImFjbCI6eyJwYXRocyI6eyIvKi91c2Vycy8qKiI6e30sIi8qL2NvbnZlcnNhdGlvbnMvKioiOnt9LCIvKi9zZXNzaW9ucy8qKiI6e30sIi8qL2RldmljZXMvKioiOnt9LCIvKi9pbWFnZS8qKiI6e30sIi8qL21lZGlhLyoqIjp7fSwiLyovYXBwbGljYXRpb25zLyoqIjp7fSwiLyovcHVzaC8qKiI6e30sIi8qL2tub2NraW5nLyoqIjp7fSwiLyovbGVncy8qKiI6e319fX0.LT_A2RXI8z3EO7PHx6hz6r3ksFYz-_ly-lbOlOMaRso2BR-D6aAXJkSxlhTbxSPUjARzHx7B8EuWfFewcFslMfuRU7GN2aIoA8ZBzv4LDrTfh2eyPyd2C-cSffK-BIRiTxvRJexoddMB768IZxBRJIeBBUEQ1PJmGobaXu6GiL2egdoTaFM7sH3BcPXBSQjr5uAyAxSIvkMWv2NZ4rLKYfsn61wkqr1W_s-m-njObjPscTSwGZzNENkSa3mS4x1Ub52OXXl5jMjjS-qiG2fMyPvrbOkG__pchkZTJ5Nm6BOiicJMzxnYNuMAxvF-e-DaHq7fI60xGYE4qVY09n1XGQ ◀eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2NzEzNDAzOTAsImV4cCI6MTY3MTQxMjM5MCwianRpIjoiTkRNNE5EQXhNakV4IiwiYXBwbGljYXRpb25faWQiOiJiYThlYmRmMC05NGYwLTRlZmY";
+    private static final String jwtToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2NzE0NDc5NjYsImV4cCI6MTY3MTUxOTk2NiwianRpIjoiTVRVMU56RXdPRGcwTkE9PSIsImFwcGxpY2F0aW9uX2lkIjoiYmE4ZWJkZjAtOTRmMC00ZWZmLWFlNjMtOTE0ZjA3MDY2NGMxIiwic3ViIjoiSVFESUFMX0xPQ0FMX1RFU1Q6V0VCOjQ6bUBtLmNvbSIsImFjbCI6eyJwYXRocyI6eyIvKi91c2Vycy8qKiI6e30sIi8qL2NvbnZlcnNhdGlvbnMvKioiOnt9LCIvKi9zZXNzaW9ucy8qKiI6e30sIi8qL2RldmljZXMvKioiOnt9LCIvKi9pbWFnZS8qKiI6e30sIi8qL21lZGlhLyoqIjp7fSwiLyovYXBwbGljYXRpb25zLyoqIjp7fSwiLyovcHVzaC8qKiI6e30sIi8qL2tub2NraW5nLyoqIjp7fSwiLyovbGVncy8qKiI6e319fX0.z82bbtLYIzbtA_i9TV1Xwb7e3tgUsE2kR-NY0b3bL9VnN9q96uO_C0ffO0CY4haS5zK6afXU307xjd6qS0o1FpbzvARA4N_K7Ubb8_M-7Fmdb_9K1awayD7ZBkMIHngwTzgLQvFzE7CP9_-MFIKxFqBfewZj5GdjOi6diglNjwwI4GJ1evHJ5xteXhUa4mxZxpA62V99Xsu5mVYjsMB3cdatm2z3-0fWcYzkMnSpNa6vvsNxKjN948vSzay4MdnUg5708dkA4JBmr8jlUecGIGy8ZNNpIuoymkiXCPpMHL5bqxd3DZj6OP8g4q_1E0ETWOhLw_w418gB-A81VBmjSg ◀eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2NzE0NDc5NjYsImV4cCI6MTY3MTUxOTk2NiwianRpIjoiTVRVMU56RXdPRGcwTkE9PSIsImFwcGxpY2F0aW9uX2lkIjoiYmE4ZWJkZjAtOTRmMC0";
     public static final int  CALL_PERM_CODE = 123;
 
     @Override
@@ -252,12 +252,23 @@ public class MainActivity extends AppCompatActivity {
 
     public void registerNexmoClient(){
         // init client
-        client = NexmoClient.get();
+        client = new NexmoClient.Builder()
+                //.restEnvironmentHost("https://api-us-3.vonage.com")
+                //.environmentHost("https://ws-us-3.vonage.com")
+                .build(this);
+
+        //client = NexmoClient.get();
         Log.d(TAG, "NexmoClientTest: "+String.valueOf(client));
+
+        //NexmoClient.get().login("uyuyuiyiuyiuyui");
+        client.login(jwtToken);
+        //Log.d(TAG, "jwtToken: "+jwtToken);
 
         //Listen for client connection status changes
         client.setConnectionListener((connectionStatus, connectionStatusReason) -> {
             Log.d(TAG, "NexmoClient connectionStatus: " +connectionStatus.toString());
+            Log.d(TAG, "NexmoClient connectionStatusReason: " +connectionStatusReason.toString());
+
             runOnUiThread(() -> {
                 connectionStatusTextView.setText(connectionStatus.toString());
             });
@@ -277,9 +288,6 @@ public class MainActivity extends AppCompatActivity {
         });
         //client.removeIncomingCallListeners();
 
-        //NexmoClient.get().login("uyuyuiyiuyiuyui");
-        client.login(jwtToken);
-        //Log.d(TAG, "jwtToken: "+jwtToken);
     }
 
 
