@@ -4,6 +4,7 @@ import android.app.Application;
 import android.util.Log;
 
 import com.nexmo.client.NexmoClient;
+import static com.nexmo.utils.logger.ILogger.eLogLevel;
 
 public class MainApplication extends Application{
 
@@ -13,10 +14,11 @@ public class MainApplication extends Application{
     public void onCreate() {
         super.onCreate();
 
-//        new NexmoClient.Builder()
-//            .restEnvironmentHost("https://api-us-3.vonage.com")
-//            .environmentHost("https://ws-us-3.vonage.com")
-//            .build(this);
-//        Log.d(TAG, "NexmoClient: "+String.valueOf(NexmoClient.get()));
+        new NexmoClient.Builder()
+                //.restEnvironmentHost("https://api-us-3.vonage.com")
+                //.environmentHost("https://ws-us-3.vonage.com")
+                //.logLevel(eLogLevel.DEBUG)
+                .build(this);
+                Log.d(TAG, "NexmoClient: "+String.valueOf(NexmoClient.get()));
     }
 }

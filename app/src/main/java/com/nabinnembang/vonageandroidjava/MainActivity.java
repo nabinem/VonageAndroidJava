@@ -7,6 +7,7 @@ import android.app.NotificationManager;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -32,6 +33,7 @@ import com.nexmo.client.NexmoMediaActionState;
 import com.nexmo.client.request_listener.NexmoApiError;
 import com.nexmo.client.request_listener.NexmoConnectionListener.ConnectionStatus;
 import com.nexmo.client.request_listener.NexmoRequestListener;
+import static com.nexmo.utils.logger.ILogger.eLogLevel;
 
 import java.util.HashMap;
 
@@ -48,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private Button answerCallButton;
     private Button rejectCallButton;
     private TextView connectionStatusTextView;
-    private static final String jwtToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2NzE0NDc5NjYsImV4cCI6MTY3MTUxOTk2NiwianRpIjoiTVRVMU56RXdPRGcwTkE9PSIsImFwcGxpY2F0aW9uX2lkIjoiYmE4ZWJkZjAtOTRmMC00ZWZmLWFlNjMtOTE0ZjA3MDY2NGMxIiwic3ViIjoiSVFESUFMX0xPQ0FMX1RFU1Q6V0VCOjQ6bUBtLmNvbSIsImFjbCI6eyJwYXRocyI6eyIvKi91c2Vycy8qKiI6e30sIi8qL2NvbnZlcnNhdGlvbnMvKioiOnt9LCIvKi9zZXNzaW9ucy8qKiI6e30sIi8qL2RldmljZXMvKioiOnt9LCIvKi9pbWFnZS8qKiI6e30sIi8qL21lZGlhLyoqIjp7fSwiLyovYXBwbGljYXRpb25zLyoqIjp7fSwiLyovcHVzaC8qKiI6e30sIi8qL2tub2NraW5nLyoqIjp7fSwiLyovbGVncy8qKiI6e319fX0.z82bbtLYIzbtA_i9TV1Xwb7e3tgUsE2kR-NY0b3bL9VnN9q96uO_C0ffO0CY4haS5zK6afXU307xjd6qS0o1FpbzvARA4N_K7Ubb8_M-7Fmdb_9K1awayD7ZBkMIHngwTzgLQvFzE7CP9_-MFIKxFqBfewZj5GdjOi6diglNjwwI4GJ1evHJ5xteXhUa4mxZxpA62V99Xsu5mVYjsMB3cdatm2z3-0fWcYzkMnSpNa6vvsNxKjN948vSzay4MdnUg5708dkA4JBmr8jlUecGIGy8ZNNpIuoymkiXCPpMHL5bqxd3DZj6OP8g4q_1E0ETWOhLw_w418gB-A81VBmjSg ◀eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2NzE0NDc5NjYsImV4cCI6MTY3MTUxOTk2NiwianRpIjoiTVRVMU56RXdPRGcwTkE9PSIsImFwcGxpY2F0aW9uX2lkIjoiYmE4ZWJkZjAtOTRmMC0";
+    private static final String jwtToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2NzE1MzEzNDUsImV4cCI6MTY3MTYwMzM0NSwianRpIjoiTVRNM01UZ3dNRFEwTkE9PSIsImFwcGxpY2F0aW9uX2lkIjoiYmE4ZWJkZjAtOTRmMC00ZWZmLWFlNjMtOTE0ZjA3MDY2NGMxIiwic3ViIjoiSVFESUFMX0xPQ0FMOk1PQklMRTo0Om1AbS5jb20iLCJhY2wiOnsicGF0aHMiOnsiLyovdXNlcnMvKioiOnt9LCIvKi9jb252ZXJzYXRpb25zLyoqIjp7fSwiLyovc2Vzc2lvbnMvKioiOnt9LCIvKi9kZXZpY2VzLyoqIjp7fSwiLyovaW1hZ2UvKioiOnt9LCIvKi9tZWRpYS8qKiI6e30sIi8qL2FwcGxpY2F0aW9ucy8qKiI6e30sIi8qL3B1c2gvKioiOnt9LCIvKi9rbm9ja2luZy8qKiI6e30sIi8qL2xlZ3MvKioiOnt9fX19.LULbucOvLfLVcGeexOqpMiA3lpKQ0TQlgXiYpCJKGIZdfd72dDnV55oHiaPdgEKXOcpMEuKihbgVSPRSNoR-dIb7m7473WRP0Bc-IhNhn-5UK6zyDHgSH9rNv06oYTxWVykeN3YoIbjTnSOVUaON0cYPQJK659h-oPqLexU-zqMvib7GKQvm5koa5ZlqeGNTg11CfKgbr05viQky4dCooi4kPqQscb3xKP8RNiACGrbCeYed0HDBBtldevPAI1N5c1pPCzovCN-Ktse1rz74PwBDZdt8AL36YpNngiW2z3fsB0nF98NogJokG-8pRRZUbCZhlDD7TyU4ijH77AGv1A";
     public static final int  CALL_PERM_CODE = 123;
 
     @Override
@@ -121,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
             public void onSuccess(@Nullable NexmoCall call) {
                 runOnUiThread(() -> {
                     endCallButton.setVisibility(View.VISIBLE);
-                    //startCallButton.setVisibility(View.INVISIBLE);
+                    startCallButton.setVisibility(View.INVISIBLE);
                 });
 
                 onGoingCall = call;
@@ -133,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
 
                             runOnUiThread(() -> {
                                 endCallButton.setVisibility(View.INVISIBLE);
-                                //startCallButton.setVisibility(View.VISIBLE);
+                                startCallButton.setVisibility(View.VISIBLE);
                             });
                         }
                     }
@@ -252,17 +254,18 @@ public class MainActivity extends AppCompatActivity {
 
     public void registerNexmoClient(){
         // init client
-        client = new NexmoClient.Builder()
+        //client = new NexmoClient.Builder()
                 //.restEnvironmentHost("https://api-us-3.vonage.com")
                 //.environmentHost("https://ws-us-3.vonage.com")
-                .build(this);
+                //.logLevel(eLogLevel.DEBUG)
+                //.build(this);
 
-        //client = NexmoClient.get();
+        client = NexmoClient.get();
         Log.d(TAG, "NexmoClientTest: "+String.valueOf(client));
 
         //NexmoClient.get().login("uyuyuiyiuyiuyui");
         client.login(jwtToken);
-        //Log.d(TAG, "jwtToken: "+jwtToken);
+        //Log.d(TAG, "jwtToken: "+ 0x25c0 jwtToken);
 
         //Listen for client connection status changes
         client.setConnectionListener((connectionStatus, connectionStatusReason) -> {
@@ -275,7 +278,7 @@ public class MainActivity extends AppCompatActivity {
 
             if (connectionStatus == ConnectionStatus.CONNECTED) {
                 runOnUiThread(() -> {
-                    // startCallButton.setVisibility(View.VISIBLE);
+                    startCallButton.setVisibility(View.VISIBLE);
                 });
             }
         });
